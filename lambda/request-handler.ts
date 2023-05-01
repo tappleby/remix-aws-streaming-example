@@ -5,7 +5,6 @@ import type {
   Response as NodeResponse,
 } from "@remix-run/node";
 import {
-  AbortController as NodeAbortController,
   createRequestHandler as createRemixRequestHandler,
   Headers as NodeHeaders,
   Request as NodeRequest,
@@ -74,15 +73,13 @@ export function createRemixRequest(
     "multipart/form-data"
   );
 
-  let controller = new NodeAbortController();
+  let controller = new AbortController();
   res.on("close", () => controller.abort());
 
   return new NodeRequest(url.href, {
     method: event.requestContext.http.method,
     headers: createRemixHeaders(event.headers, event.cookies),
-    // Cast until reason/throwIfAborted added
-    // https://github.com/mysticatea/abort-controller/issues/36
-    signal: controller.signal as NodeRequestInit["signal"],
+    signal: controller.signal,
     body:
       event.body && event.isBase64Encoded
         ? isFormData
