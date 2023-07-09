@@ -1,38 +1,17 @@
-import type {
-  APIGatewayProxyEventV2,
-  APIGatewayProxyStructuredResultV2,
-  Context,
-} from "aws-lambda";
-import type { Writable } from "stream";
+import type { AwsLambdaGlobal } from "./awslambda";
 import { createRequestHandler } from "./request-handler";
 import * as build from "@remix-run/dev/server-build";
 
-export type AWSResponseStream = Writable;
+declare const awslambda: AwsLambdaGlobal;
 
-export type AWSStreamResponseMetadata = Pick<
-  APIGatewayProxyStructuredResultV2,
-  "statusCode" | "headers" | "cookies"
->;
-
-declare const awslambda: {
-  streamifyResponse: (
-    handler: (
-      event: APIGatewayProxyEventV2,
-      response: AWSResponseStream,
-      context: Context
-    ) => Promise<void>
-  ) => any;
-  HttpResponseStream: {
-    from: (
-      stream: AWSResponseStream,
-      httpResponseMetadata: AWSStreamResponseMetadata
-    ) => AWSResponseStream;
-  };
-};
+const requestHandler = createRequestHandler({
+  build,
+  mode: process.env.NODE_ENV,
+});
 
 export const handler = awslambda.streamifyResponse(
-  createRequestHandler({
-    build,
-    mode: process.env.NODE_ENV,
-  })
+  (event, response, context) => {
+    console.log("EVENT:", event);
+    return requestHandler(event, response, context);
+  }
 );

@@ -18,6 +18,9 @@ import type {
 } from "aws-lambda";
 
 import type { Writable } from "stream";
+import type { AwsLambdaGlobal } from "./awslambda";
+
+declare const awslambda: AwsLambdaGlobal;
 
 /**
  * A function that returns the value to use as `context` in route `loader` and
