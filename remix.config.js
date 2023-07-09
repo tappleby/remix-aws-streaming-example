@@ -6,6 +6,7 @@ module.exports = {
   // serverBuildPath: "build/index.js",
   // publicPath: "/build/",
   future: {
+    v2_headers: true,
     v2_errorBoundary: true,
     v2_meta: true,
     v2_normalizeFormMethod: true,
@@ -13,5 +14,6 @@ module.exports = {
   },
   server: process.env.NODE_ENV === "development" ? undefined : "./lambda",
   serverBuildPath: "build/index.js",
+  serverModuleFormat: "cjs",
   serverDependenciesToBundle: "all",
 };
