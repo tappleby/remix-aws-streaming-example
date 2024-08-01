@@ -17,10 +17,13 @@ export class RemixStreamingStack extends cdk.Stack {
     // Configure Remix handler
     // *************************************
     const remixHandler = new nodejs.NodejsFunction(this, "RemixHandler", {
-      entry: path.join(__dirname, "../../build/index.js"),
-      runtime: lambda.Runtime.NODEJS_18_X,
+      entry: path.join(__dirname, "../../build/lambda/index.js"),
+      runtime: lambda.Runtime.NODEJS_20_X,
       timeout: cdk.Duration.seconds(30),
       memorySize: 512,
+      bundling: {
+        format: nodejs.OutputFormat.ESM
+      },
       environment: {
         NODE_ENV: "production",
       },
@@ -45,7 +48,7 @@ export class RemixStreamingStack extends cdk.Stack {
     // Use BucketDeployment for simplicity, for a production workload its better
     // to use something like github actions to deploy the Remix Handler + Assets
     new s3deploy.BucketDeployment(this, "DeployRemixAssets", {
-      sources: [s3deploy.Source.asset(path.join(__dirname, "../../public"))],
+      sources: [s3deploy.Source.asset(path.join(__dirname, "../../build/client"))],
       destinationBucket: assetBucket,
     });
 

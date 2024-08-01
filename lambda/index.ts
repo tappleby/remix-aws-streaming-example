@@ -1,6 +1,6 @@
 import type { AwsLambdaGlobal } from "./awslambda";
 import { createRequestHandler } from "./request-handler";
-import * as build from "@remix-run/dev/server-build";
+import * as build from "../build/server/index";
 
 declare const awslambda: AwsLambdaGlobal;
 
