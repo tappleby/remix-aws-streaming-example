@@ -1,13 +1,9 @@
 import type {
   AppLoadContext,
-  ServerBuild,
-  RequestInit as NodeRequestInit,
-  Response as NodeResponse,
+  ServerBuild
 } from "@remix-run/node";
 import {
   createRequestHandler as createRemixRequestHandler,
-  Headers as NodeHeaders,
-  Request as NodeRequest,
   writeReadableStreamToWritable,
 } from "@remix-run/node";
 import type {
@@ -58,7 +54,7 @@ export function createRequestHandler({
     let request = createRemixRequest(event, responseStream);
     let loadContext = getLoadContext?.(event);
 
-    let response = (await handleRequest(request, loadContext)) as NodeResponse;
+    let response = (await handleRequest(request, loadContext)) as Response;
 
     return sendRemixResponse(response, responseStream);
   };
@@ -67,7 +63,7 @@ export function createRequestHandler({
 export function createRemixRequest(
   event: APIGatewayProxyEventV2,
   res: Writable
-): NodeRequest {
+): Request {
   let host = event.headers["x-forwarded-host"] || event.headers.host;
   let search = event.rawQueryString.length ? `?${event.rawQueryString}` : "";
   let scheme = process.env.ARC_SANDBOX ? "http" : "https";
@@ -79,7 +75,7 @@ export function createRemixRequest(
   let controller = new AbortController();
   res.on("close", () => controller.abort());
 
-  return new NodeRequest(url.href, {
+  return new Request(url.href, {
     method: event.requestContext.http.method,
     headers: createRemixHeaders(event.headers, event.cookies),
     signal: controller.signal,
@@ -95,8 +91,8 @@ export function createRemixRequest(
 export function createRemixHeaders(
   requestHeaders: APIGatewayProxyEventHeaders,
   requestCookies?: string[]
-): NodeHeaders {
-  let headers = new NodeHeaders();
+): Headers {
+  let headers = new Headers();
 
   for (let [header, value] of Object.entries(requestHeaders)) {
     if (value) {
@@ -112,7 +108,7 @@ export function createRemixHeaders(
 }
 
 export async function sendRemixResponse(
-  nodeResponse: NodeResponse,
+  nodeResponse: Response,
   res: Writable
 ): Promise<void> {
   let cookies: string[] = [];

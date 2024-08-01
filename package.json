@@ -1,32 +1,48 @@
 {
+  "name": "remix-aws-streaming-example",
   "private": true,
   "sideEffects": false,
+  "type": "module",
   "scripts": {
-    "build": "remix build",
-    "dev": "remix dev",
-    "start": "remix-serve build",
+    "build": "npm run build:app && npm run build:lambda",
+    "build:app": "remix vite:build",
+    "build:lambda": "vite build -c vite.lambda.config.ts",
+    "dev": "remix vite:dev",
+    "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
+    "start": "remix-serve ./build/server/index.js",
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@remix-run/node": "^1.18.1",
-    "@remix-run/react": "^1.18.1",
-    "@remix-run/serve": "^1.18.1",
+    "@remix-run/node": "^2.10.3",
+    "@remix-run/react": "^2.10.3",
+    "@remix-run/serve": "^2.10.3",
     "aws-lambda": "^1.0.7",
-    "isbot": "^3.6.12",
+    "isbot": "^4.1.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "tsscmp": "^1.0.6"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@remix-run/dev": "^1.18.1",
-    "@remix-run/eslint-config": "^1.18.1",
-    "@types/aws-lambda": "^8.10.119",
-    "@types/react": "^18.2.14",
-    "@types/react-dom": "^18.2.6",
-    "eslint": "^8.44.0",
-    "typescript": "^4.8.4"
+    "@remix-run/dev": "^2.10.3",
+    "@types/aws-lambda": "^8.10.142",
+    "@types/react": "^18.2.20",
+    "@types/react-dom": "^18.2.7",
+    "@typescript-eslint/eslint-plugin": "^6.7.4",
+    "@typescript-eslint/parser": "^6.7.4",
+    "autoprefixer": "^10.4.19",
+    "eslint": "^8.38.0",
+    "eslint-import-resolver-typescript": "^3.6.1",
+    "eslint-plugin-import": "^2.28.1",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.1.6",
+    "vite": "^5.1.0",
+    "vite-tsconfig-paths": "^4.2.1"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=20.0.0"
   }
 }
